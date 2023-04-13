@@ -2,7 +2,7 @@
 # we need to import our libaraies
 #if these are not installed we need to insall them
 # pip install pygame -U
-# pip install pygame_gui -U
+# pip install pygame_gui -U 
 # -U is not needed if you have never installed it will update instead if already there
 import pygame
 import pygame_gui
@@ -14,7 +14,7 @@ class ShipSpriteClass:
     surface3 = None
     location_x = 0
     location_y = 0    
-    movement_y = 20
+    movement_y = 40
     period_cycle_time = 5
     framerate_time = 2
     window_surface = None
@@ -74,6 +74,7 @@ class BackgroundSpriteClass:
 pygame.init() 
 # name at the top of the window
 pygame.display.set_caption('Turbo!') 
+#window_surface = pygame.display.set_mode((800, 600), pygame.FULLSCREEN)
 window_surface = pygame.display.set_mode((800, 600))
 
 # initalize the gui manager we want to use and HOLD ON to the object it creates
@@ -85,22 +86,16 @@ Start_Two = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((650, 550), (
 namePlayer1 = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((20, 10), (150, 40)), initial_text= "Player 1", manager=manager)
 namePlayer2 = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((200, 10), (150, 40)), initial_text= "Player 2", manager=manager)
 
-# load and scale an image stored in the same directory as this .py file
-#ship1 = pygame.image.load("ship_1.png").convert()
-#ship1 = pygame.Surface.convert_alpha(ship1)
 ship = ShipSpriteClass(window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 200, 200)
-
+ship2 = ShipSpriteClass(window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 300, 300)
+ship3 = ShipSpriteClass(window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 100, 100)
 coolbackground = BackgroundSpriteClass(window_surface, "background.png")
-#coolbackground = pygame.image.load("background.png").convert()
 # create a clock object so we can do thigs with time and things like elapsed time
 clock = pygame.time.Clock()
 # we are want to track cummulative time so we start with it as
 time_cumulative = 0
 # create a flag for running (and for exiting)
 is_running = True
-#lets make our image location into variables so we can change them while running
-image_location_x = 0
-image_location_y = 0
 #lets loop until we are told to quit by our is_running flag
 while is_running:
     #lets get our our time in between 'frames' aka time since new image was displayed
@@ -120,10 +115,7 @@ while is_running:
             #which button was hit...was it this one?
             if event.ui_element == Start_One:
                 #print some stuff anf move our image
-                print('Start Pressed!!')
-                print(time_delta) # time since last frame update
-                print(time_cumulative) # time since  game started                
-                image_location_x += 10
+                is_running = False
         #this frame could have more than one event so lets process/get any other that may exist
         manager.process_events(event)
             
@@ -133,6 +125,8 @@ while is_running:
     # all our drawing is now up in the classes!
     coolbackground.draw()
     ship.draw(time_cumulative)    
+    ship2.draw(time_cumulative+ 1.3)  
+    ship3.draw(time_cumulative+ 2.7) 
     
     manager.draw_ui(window_surface)
     # swap the background image we have been drawing on to the screen
