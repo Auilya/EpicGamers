@@ -53,11 +53,13 @@ class ShipSpriteClass:
         #every 1/3 of a second we want to change our 'frame' to a different picture
         if frametime < self.framerate_time * .90:
             self.window_surface.blit(self.surface1, (self.location_x, loc_y))
-        elif frametime < self.framerate_time * .95:
+        elif frametime < self.framerate_time * .93:
             self.window_surface.blit(self.surface2, (self.location_x, loc_y))
+        elif frametime < self.framerate_time * .96:
+            self.window_surface.blit(self.surface3, (self.location_x, loc_y))
         else:
-            self.window_surface.blit(self.surface3, (self.location_x, loc_y))      
-
+            self.window_surface.blit(self.surface2, (self.location_x, loc_y))            
+        
 class BackgroundSpriteClass:
     surface = None
     window_surface = None
