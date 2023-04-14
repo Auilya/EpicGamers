@@ -19,12 +19,9 @@ class ShipSpriteClass:
     framerate_time = 2
     window_surface = None
     def __init__(self, window_surface, filename1, filename2, filename3, start_x, start_y):
-        self.surface1 = pygame.image.load(filename1).convert()
-        self.surface1 = pygame.Surface.convert_alpha(self.surface1)
-        self.surface2 = pygame.image.load(filename2).convert()
-        self.surface2 = pygame.Surface.convert_alpha(self.surface2)
-        self.surface3 = pygame.image.load(filename3).convert()
-        self.surface3 = pygame.Surface.convert_alpha(self.surface3)
+        self.surface1 = pygame.image.load(filename1).convert_alpha()
+        self.surface2 = pygame.image.load(filename2).convert_alpha()
+        self.surface3 = pygame.image.load(filename3).convert_alpha()
         self.location_x = start_x
         self.location_y = start_y
         self.window_surface = window_surface
