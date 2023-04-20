@@ -53,7 +53,7 @@ ship2 = ShipSpriteClass(window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 2
 ship3 = ShipSpriteClass(window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 100, 100)
 ship4 = ShipSpriteClass(window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 300, 100)
 menu_background = BackgroundSpriteClass(window_surface, "background.png")
-game_background = BackgroundSpriteClass(window_surface, "background.png")
+game_background = BackgroundSpriteClass(window_surface, "race_background.png")
 
 # create a clock object so we can do thigs with time and things like elapsed time
 clock = pygame.time.Clock()
@@ -137,8 +137,6 @@ while is_running:
     manager.draw_ui(window_surface)
     # swap the background image we have been drawing on to the screen
     pygame.display.update() 
-    if currentState != nextState:
-        pass
     currentState = nextState # we had a state change, lets set it for next iteration of the look
     if currentState == GameStates.EXIT:
         is_running = False
