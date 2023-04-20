@@ -48,8 +48,8 @@ Score_Field = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((350, 20), (
 BackMenu = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((20, 560), (60, 30)), container= Game_Container,text='Back', manager=manager)
 
 
-ship = ShipSpriteClass(window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 200, 200)
-ship2 = ShipSpriteClass(window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 300, 300)
+ship = ShipSpriteClass(window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 20, 150)
+ship2 = ShipSpriteClass(window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 200, 200)
 ship3 = ShipSpriteClass(window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 100, 100)
 ship4 = ShipSpriteClass(window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 300, 100)
 menu_background = BackgroundSpriteClass(window_surface, "background.png")
@@ -83,7 +83,7 @@ while is_running:
             Game_Container.show()
             nextState = GameStates.COUNTDOWN_TO_GAME   
             countdown_start = time_cumulative 
-            pygame.time.set_timer(pygame.event.Event(START_GAME), 4000) # countdown timer           
+            pygame.time.set_timer(pygame.event.Event(START_GAME), 4000, 1) # countdown timer           
         elif event.type == START_GAME:
             Menu_Container.hide()
             Game_Container.show()
@@ -126,8 +126,7 @@ while is_running:
     
     # all our drawing is now up in the classes!
     if currentState == GameStates.SHOWING_MENU:
-        menu_background.draw()
-        ship.draw(time_cumulative)    
+        menu_background.draw()           
         ship2.draw(time_cumulative+ 1.3)  
         ship3.draw(time_cumulative+ 2.7) 
         ship4.draw(time_cumulative+ .7) 
@@ -138,6 +137,8 @@ while is_running:
     manager.draw_ui(window_surface)
     # swap the background image we have been drawing on to the screen
     pygame.display.update() 
+    if currentState != nextState:
+        pass
     currentState = nextState # we had a state change, lets set it for next iteration of the look
     if currentState == GameStates.EXIT:
         is_running = False
