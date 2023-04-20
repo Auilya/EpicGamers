@@ -52,7 +52,8 @@ ship = ShipSpriteClass(window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 20
 ship2 = ShipSpriteClass(window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 300, 300)
 ship3 = ShipSpriteClass(window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 100, 100)
 ship4 = ShipSpriteClass(window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 300, 100)
-coolbackground = BackgroundSpriteClass(window_surface, "background.png")
+menu_background = BackgroundSpriteClass(window_surface, "background.png")
+game_background = BackgroundSpriteClass(window_surface, "background.png")
 
 # create a clock object so we can do thigs with time and things like elapsed time
 clock = pygame.time.Clock()
@@ -124,11 +125,15 @@ while is_running:
     manager.update(time_delta)
     
     # all our drawing is now up in the classes!
-    coolbackground.draw()
-    ship.draw(time_cumulative)    
-    ship2.draw(time_cumulative+ 1.3)  
-    ship3.draw(time_cumulative+ 2.7) 
-    ship4.draw(time_cumulative+ .7) 
+    if currentState == GameStates.SHOWING_MENU:
+        menu_background.draw()
+        ship.draw(time_cumulative)    
+        ship2.draw(time_cumulative+ 1.3)  
+        ship3.draw(time_cumulative+ 2.7) 
+        ship4.draw(time_cumulative+ .7) 
+    else:
+        game_background.draw()
+        ship.draw(time_cumulative)    
     
     manager.draw_ui(window_surface)
     # swap the background image we have been drawing on to the screen
