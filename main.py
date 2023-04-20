@@ -6,6 +6,7 @@
 # -U is not needed if you have never installed it will update instead if already there
 import pygame
 import pygame_gui
+from pygame_gui.core import ObjectID
 from spriteclasses import *
 from enum import Enum
 
@@ -29,9 +30,9 @@ class GameStates(Enum):
 pygame.init()  # pygame library needs to initalize itself
 pygame.display.set_caption('Turbo!') # name at the top of the window
 
-
+#print(pygame.font.get_fonts())
 window_surface = pygame.display.set_mode((800, 600)) #window_surface = pygame.display.set_mode((800, 600), pygame.FULLSCREEN)
-manager = pygame_gui.UIManager((800, 600)) # initalize the gui manager we want to use and HOLD ON to the object it creates
+manager = pygame_gui.UIManager((800, 600), "themes.json") # initalize the gui manager we want to use and HOLD ON to the object it creates
 
 # lets make containers to hold the controls for each 'screen'
 Menu_Container = pygame_gui.core.UIContainer(relative_rect=pygame.Rect((0,0),(800,600)), manager=manager)
@@ -43,7 +44,7 @@ namePlayer1 = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((20,
 ExitGame = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((20, 560), (60, 30)), container= Menu_Container,text='Exit', manager=manager)
 
 Game_Container = pygame_gui.core.UIContainer(relative_rect=pygame.Rect((0,0),(800,600)), manager=manager)
-Score_Field = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((350, 40), (100, 10)), container= Game_Container,text='0000', manager=manager)
+Score_Field = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((350, 20), (100, 30)), container= Game_Container,text='0000', manager=manager)
 BackMenu = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((20, 560), (60, 30)), container= Game_Container,text='Back', manager=manager)
 
 

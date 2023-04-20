@@ -1,0 +1,11 @@
+{
+    "label":
+    {
+        "colours":
+        {
+            "dark_bg": "#000000",
+            "normal_text": "#FFFFFF",
+            "text_shadow": "#505050"
+        }
+    }
+}
