@@ -31,7 +31,7 @@ class ShipSpriteClass:
         # time within out 'cycle' which happens every 5 seconds: location_time
         # How far we want out ship to move up and down: self.movement_y
         # ..so.. first we must scale our input location_time to the sin functions range of between 0 ans 2pi
-        scaled_time = (math.pi * location_time)/ self.period_cycle_time
+        scaled_time = (2 * math.pi * location_time)/ self.period_cycle_time
         #now lets get our sin value which will range between 1 and -1
         sin_output = math.sin(scaled_time)
         # now lets scale that result to our movement_y range and calculate our ships location
