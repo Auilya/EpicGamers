@@ -11,6 +11,8 @@ class AppClass():
     window_surface = None
     manager = None
     clock = None
+    time_delta = 0
+    time_cumulative = 0
     def __init__(self):
         pygame.init() 
         pygame.display.set_caption('Turbo!') 
@@ -19,3 +21,7 @@ class AppClass():
         self.clock = pygame.time.Clock()
         self.time_cumulative = 0 
         self.countdown_start = 0
+
+    def updateClock(self):
+        self.time_delta = self.clock.tick(60)/1000.0          
+        self.time_cumulative = self.time_delta + self.time_cumulative  

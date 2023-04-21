@@ -15,15 +15,17 @@ class MenuClass:
     ship2 = None
     ship3 = None
     ship4 = None
+    app = None
 
-    def __init__(self, window_surface, manager):
-        self.window_surface = window_surface
-        self.ui_manager = manager
-        self.image_background = BackgroundSpriteClass(window_surface, "background.png")     
-        self.ship2 = ShipSpriteClass(window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 200, 200)
-        self.ship3 = ShipSpriteClass(window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 100, 100)
-        self.ship4 = ShipSpriteClass(window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 300, 100)   
-        self.Menu_Container = pygame_gui.core.UIContainer(relative_rect=pygame.Rect((0,0),(800,600)), manager=manager)
+    def __init__(self, app):
+        self.app = app
+        self.window_surface = self.app.window_surface
+        self.ui_manager = self.app.manager
+        self.image_background = BackgroundSpriteClass(self.window_surface, "background.png")     
+        self.ship2 = ShipSpriteClass(self.window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 200, 200)
+        self.ship3 = ShipSpriteClass(self.window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 100, 100)
+        self.ship4 = ShipSpriteClass(self.window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 300, 100)   
+        self.Menu_Container = pygame_gui.core.UIContainer(relative_rect=pygame.Rect((0,0),(800,600)), manager=self.ui_manager)
         self.Start_One = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((550, 550), (100, 50)), 
                                                     container= self.Menu_Container, 
                                                     text='Start One', 
@@ -55,10 +57,10 @@ class MenuClass:
             if event.ui_element == self.ExitGame:
                 pygame.event.post(pygame.event.Event(QUIT_PLAY))
 
-    def do_state(self, state, time_cumulative):
+    def do_state(self, state):
         if state == GameStates.SHOWING_MENU:  
             self.image_background.draw() 
-            self.ship2.draw(time_cumulative+ 1.3)  
-            self.ship3.draw(time_cumulative+ 2.7) 
-            self.ship4.draw(time_cumulative+ .7) 
+            self.ship2.draw(self.app.time_cumulative+ 1.3)  
+            self.ship3.draw(self.app.time_cumulative+ 2.7) 
+            self.ship4.draw(self.app.time_cumulative+ .7) 
         
