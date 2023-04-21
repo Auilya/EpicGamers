@@ -62,15 +62,22 @@ class CountdownSpriteClass:
         self.location_x = start_x
         self.location_y = start_y
         self.window_surface = window_surface
-    def draw(self, delta_time):        
+    def draw(self, delta_time):     
+        amplitude_x = 10  # adjust this to change the width of the float
+        amplitude_y = 20  # adjust this to change the height of the float
+        frequency_x = 1  # adjust this to change the speed in the x direction
+        frequency_y = 0.5  # adjust this to change the speed in the y direction
+        x = amplitude_x * math.sin(2*math.pi*frequency_x*(delta_time))
+        y = amplitude_y * math.cos(2*math.pi*frequency_y*(delta_time))
+  
         if delta_time < 1.0:
-            self.window_surface.blit(self.surface3, (self.location_x, self.location_y))
+            self.window_surface.blit(self.surface3, (self.location_x + x, self.location_y + y))
         elif delta_time < 2.0:
-            self.window_surface.blit(self.surface2, (self.location_x, self.location_y))
+            self.window_surface.blit(self.surface2, (self.location_x + x, self.location_y + y))
         elif delta_time < 3.0:
-            self.window_surface.blit(self.surface1, (self.location_x, self.location_y))
+            self.window_surface.blit(self.surface1, (self.location_x + x, self.location_y + y))
         else:
-            self.window_surface.blit(self.surfacego, (self.location_x, self.location_y))  
+            self.window_surface.blit(self.surfacego, (self.location_x + x, self.location_y + y))  
 
 class BackgroundSpriteClass:
     surface = None
