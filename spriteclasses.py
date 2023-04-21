@@ -45,8 +45,33 @@ class ShipSpriteClass:
         elif frametime < self.framerate_time * .96:
             self.window_surface.blit(self.surface3, (self.location_x, loc_y))
         else:
-            self.window_surface.blit(self.surface2, (self.location_x, loc_y))            
-        
+            self.window_surface.blit(self.surface2, (self.location_x, loc_y))    
+
+class CountdownSpriteClass:
+    surfacego = None
+    surface1 = None
+    surface2 = None
+    surface3 = None
+    location_x = 0
+    location_y = 0   
+    def __init__(self, window_surface, filename1, filename2, filename3, filenamego,  start_x, start_y):
+        self.surface1 = pygame.image.load(filename1).convert_alpha()
+        self.surface2 = pygame.image.load(filename2).convert_alpha()
+        self.surface3 = pygame.image.load(filename3).convert_alpha()
+        self.surfacego = pygame.image.load(filenamego).convert_alpha()
+        self.location_x = start_x
+        self.location_y = start_y
+        self.window_surface = window_surface
+    def draw(self, delta_time):        
+        if delta_time < 1.0:
+            self.window_surface.blit(self.surface3, (self.location_x, self.location_y))
+        elif delta_time < 2.0:
+            self.window_surface.blit(self.surface2, (self.location_x, self.location_y))
+        elif delta_time < 3.0:
+            self.window_surface.blit(self.surface1, (self.location_x, self.location_y))
+        else:
+            self.window_surface.blit(self.surfacego, (self.location_x, self.location_y))  
+
 class BackgroundSpriteClass:
     surface = None
     window_surface = None

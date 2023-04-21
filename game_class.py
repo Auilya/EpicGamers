@@ -16,6 +16,7 @@ class GameClass:
     countdown_to_game = 0
     countdown_to_menu = 0
     app = None
+    countdown = None
 
     def __init__(self, app): 
         self.app = app
@@ -26,7 +27,9 @@ class GameClass:
         self.Score_Field = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((350, 20), (100, 30)), container= self.Game_Container,text='0000', manager=self.ui_manager)
         self.BackMenu = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((20, 560), (60, 30)), container= self.Game_Container,text='Back', manager=self.ui_manager)
         self.ship = ShipSpriteClass(self.window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 20, 150)
+        self.countdown = CountdownSpriteClass(self.window_surface,"Countdown_1.png","Countdown_2.png","Countdown_3.png","Countdown_go.png", 250, 100)
 
+        
     def handle_event(self, event):
         if event.type == SWITCH_TO_MENU:
             self.Game_Container.hide()   
@@ -53,4 +56,4 @@ class GameClass:
             self.image_background.draw() 
             self.ship.draw(self.app.time_cumulative)
         if state == GameStates.COUNTDOWN_TO_GAME:
-            pass
+            self.countdown.draw(self.app.time_cumulative - self.countdown_to_game)
