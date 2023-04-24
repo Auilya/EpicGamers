@@ -122,8 +122,7 @@ class GameClass:
             if self.app.currentState == GameStates.PLAYING_GAME: # only process keyboard input when game is 'running
                 key = event.unicode
                 if len(key) and key in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,.<>1234567890-=+_)(*&^%$#@!~`[]\{}|;':/? ":            
-                    print(key)
-                    print(self.gameBox.tryLetter(key))
+                    self.gameBox.tryLetter(key)
 
     def do_state(self):
         if self.app.currentState != GameStates.SHOWING_MENU:  
