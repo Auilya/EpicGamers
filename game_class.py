@@ -4,6 +4,67 @@ from pygame_gui.core import ObjectID
 from spriteclasses import *
 from events_states import *
 
+class GameTextBox:
+    textbox = None
+    text = None
+    totallength = 0
+    counterlength = 0
+    manager= None
+    container = None
+    color_Past =   "'#C756DD'"
+    color_Active = "'#FFFFFF'"
+    color_Future = "'#3BB9B2'"  
+
+    def __init__(self, text, container, manager): 
+        self.totallength = len(text)
+        self.counterlength = 0
+        self.text = text
+        self.manager = manager
+        self.container = container
+        #self.textbox = pygame_gui.elements.UITextBox(text,relative_rect=pygame.Rect((100, 350), (650, 240)), container = self.container, manager = self.manager)
+        self.populateBox()
+
+    def getProgressPercent(self):
+        if self.totallength == 0:
+            return 0
+        ret = self.counterlength/self.totallength*100.0
+        if ret > 100.0: # stuff happens...
+            return 100.0
+        else:
+            return ret
+
+    def tryLetter(self, letter):
+        if letter == self.text[self.counterlength:self.counterlength + 1]:
+            self.advanceCounter()
+            pygame.event.post(pygame.event.Event(CORRECT_CHOICE))
+            return True
+        else:
+            pygame.event.post(pygame.event.Event(WRONG_CHOICE))
+            return False
+
+    def advanceCounter(self):
+        if self.totallength > 0 and self.counterlength == self.totallength-1:
+            pygame.event.post(pygame.event.Event(END_GAME_PAUSE)) # post event that we win    
+            self.counterlength += 1
+            self.populateBox()            
+        else:
+            self.counterlength += 1
+            self.populateBox()
+        
+        
+    def populateBox(self):
+        self.textbox= None
+        if self.counterlength == 0: # we are new so we have no portion before the 'cursor'
+            newstr = "<font face='HBC.ttf' color=" + self.color_Active + " size=4>" + self.text[:1] + "</font>" \
+                "<font face='HBC.ttf' color=" + self.color_Future + " size=4>" + self.text[1:] + "</font>" 
+        elif self.counterlength == self.totallength:
+            newstr = "<font face='HBC.ttf' color=" + self.color_Past + " size=4>" + self.text[:self.counterlength] + "</font>"+ \
+                "<font face='HBC.ttf' color=" + self.color_Active + " size=4>" + self.text[self.counterlength:] + "</font>"
+        else:
+            newstr = "<font face='HBC.ttf' color=" + self.color_Past + " size=4>" + self.text[:self.counterlength] + "</font>"+ \
+                "<font face='HBC.ttf' color=" + self.color_Active + " size=4>" + self.text[self.counterlength:self.counterlength + 1] + "</font>"+ \
+                "<font face='HBC.ttf' color=" + self.color_Future + " size=4>" + self.text[self.counterlength + 1:] + "</font>"                    
+        self.textbox = pygame_gui.elements.UITextBox(newstr,relative_rect=pygame.Rect((100, 350), (650, 240)), container = self.container, manager = self.manager) 
 
 class GameClass:
     window_surface = None
@@ -17,6 +78,9 @@ class GameClass:
     countdown_to_menu = 0
     app = None
     countdown = None
+    gameBox = None
+
+    para = "It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair, we had everything before us, we had nothing before us, we were all going direct to Heaven, we were all going direct the other way - in short, the period was so far like the present period, that some of its noisiest authorities insisted on its being received, for good or for evil, in the superlative degree of comparison only."
 
     def __init__(self, app): 
         self.app = app
@@ -26,9 +90,11 @@ class GameClass:
         self.Game_Container = pygame_gui.core.UIContainer(relative_rect=pygame.Rect((0,0),(800,600)), manager=self.ui_manager)
         self.Score_Field = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((350, 20), (100, 30)), container= self.Game_Container,text='0000', manager=self.ui_manager)
         self.BackMenu = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((20, 560), (60, 30)), container= self.Game_Container,text='Back', manager=self.ui_manager)
-        self.ship = ShipSpriteClass(self.window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 20, 150)
-        self.countdown = CountdownSpriteClass(self.window_surface,"Countdown_1.png","Countdown_2.png","Countdown_3.png","Countdown_go.png", 250, 100)
+        self.ship = ShipSpriteClass(self.window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 20, 100)
+        self.countdown = CountdownSpriteClass(self.window_surface,"Countdown_1.png","Countdown_2.png","Countdown_3.png","Countdown_go.png", 250, 60)
+        self.gameBox = GameTextBox(self.para, self.Game_Container, manager=self.ui_manager)
 
+        self.advanceGame = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((260, 300), (80, 30)), container= self.Game_Container,text='>>>', manager=self.ui_manager)
         
     def handle_event(self, event):
         if event.type == SWITCH_TO_MENU:
@@ -50,10 +116,20 @@ class GameClass:
         elif event.type == pygame_gui.UI_BUTTON_PRESSED:            
             if event.ui_element == self.BackMenu:
                 pygame.event.post(pygame.event.Event(QUIT_PLAY))
+            if event.ui_element == self.advanceGame:
+                self.gameBox.advanceCounter()
+        elif event.type == pygame.KEYDOWN:               
+            if self.app.currentState == GameStates.PLAYING_GAME: # only process keyboard input when game is 'running
+                key = event.unicode
+                if len(key) and key in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,.<>1234567890-=+_)(*&^%$#@!~`[]\{}|;':/? ":            
+                    print(key)
+                    print(self.gameBox.tryLetter(key))
 
-    def do_state(self, state):
-        if state != GameStates.SHOWING_MENU:  
+    def do_state(self):
+        if self.app.currentState != GameStates.SHOWING_MENU:  
             self.image_background.draw() 
             self.ship.draw(self.app.time_cumulative)
-        if state == GameStates.COUNTDOWN_TO_GAME:
+        if self.app.currentState == GameStates.COUNTDOWN_TO_GAME:
             self.countdown.draw(self.app.time_cumulative - self.countdown_to_game)
+        elif self.app.currentState == GameStates.SHOW_SCORE:
+            pass # lets show our score!

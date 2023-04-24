@@ -15,8 +15,8 @@ app = AppClass()
 menu = MenuClass(app)
 game = GameClass(app)
 
-currentState = GameStates.SHOWING_MENU
-nextState = GameStates.SHOWING_MENU                    
+app.currentState = GameStates.SHOWING_MENU
+app.nextState = GameStates.SHOWING_MENU                    
 pygame.event.post(pygame.event.Event(SWITCH_TO_MENU))  
 
 while app.is_running:    
@@ -25,27 +25,27 @@ while app.is_running:
         menu.handle_event(event)
         game.handle_event(event)
         if event.type == SWITCH_TO_MENU:                            
-            nextState = GameStates.SHOWING_MENU   
+            app.nextState = GameStates.SHOWING_MENU   
         elif event.type == START_COUNTDOWN_TO_GAME:                        
-            nextState = GameStates.COUNTDOWN_TO_GAME            
+            app.nextState = GameStates.COUNTDOWN_TO_GAME            
         elif event.type == START_GAME:                        
-            nextState = GameStates.PLAYING_GAME 
+            app.nextState = GameStates.PLAYING_GAME 
         elif event.type == QUIT_PLAY: # give up                        
-            nextState = GameStates.SHOWING_MENU 
+            app.nextState = GameStates.SHOWING_MENU 
         elif event.type == END_GAME_PAUSE:                        
-            nextState = GameStates.SHOW_SCORE 
+            app.nextState = GameStates.SHOW_SCORE 
         elif event.type == QUIT_GAME:                        
-            nextState = GameStates.EXIT                        
+            app.nextState = GameStates.EXIT                        
         elif event.type == pygame.QUIT:
             pygame.event.post(pygame.event.Event(QUIT_GAME))  
         app.manager.process_events(event)                
 
     app.manager.update(app.time_delta)
-    menu.do_state(currentState)
-    game.do_state(currentState)        
+    menu.do_state()
+    game.do_state()        
     app.manager.draw_ui(app.window_surface)
     pygame.display.update() 
-    currentState = nextState # we had a state change, lets set it for next iteration of the look
-    if currentState == GameStates.EXIT:
+    app.currentState = app.nextState # we had a state change, lets set it for next iteration of the look
+    if app.currentState == GameStates.EXIT:
         app.is_running = False
 pygame.quit()

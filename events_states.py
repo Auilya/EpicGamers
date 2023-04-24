@@ -8,6 +8,8 @@ START_GAME              = pygame.event.custom_type()
 END_GAME_PAUSE          = pygame.event.custom_type()
 QUIT_GAME               = pygame.event.custom_type() # shut it down
 QUIT_PLAY               = pygame.event.custom_type() # give up on play and return to menu
+CORRECT_CHOICE          = pygame.event.custom_type()
+WRONG_CHOICE            = pygame.event.custom_type()
 
 #lets make sone states
 class GameStates(Enum):

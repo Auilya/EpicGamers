@@ -13,6 +13,9 @@ class AppClass():
     clock = None
     time_delta = 0
     time_cumulative = 0
+    currentState = None
+    nextState =  None
+
     def __init__(self):
         pygame.init() 
         pygame.display.set_caption('Turbo!') 

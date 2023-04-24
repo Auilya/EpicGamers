@@ -57,8 +57,8 @@ class MenuClass:
             if event.ui_element == self.ExitGame:
                 pygame.event.post(pygame.event.Event(QUIT_GAME))
 
-    def do_state(self, state):
-        if state == GameStates.SHOWING_MENU:  
+    def do_state(self):
+        if self.app.currentState == GameStates.SHOWING_MENU:  
             self.image_background.draw() 
             self.ship2.draw(self.app.time_cumulative+ 1.3)  
             self.ship3.draw(self.app.time_cumulative+ 2.7) 
