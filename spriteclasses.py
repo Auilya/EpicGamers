@@ -79,6 +79,51 @@ class CountdownSpriteClass:
         else:
             self.window_surface.blit(self.surfacego, (self.location_x + x, self.location_y + y))  
 
+class ScoreSpriteClass:
+    surfacego = None
+    surface1 = None
+    surface2 = None
+    surface3 = None
+    location_x = 0
+    location_y = 0   
+    font1 = None
+    textscore = None
+    textWPS = None
+    textErrors = None
+    
+    def __init__(self, window_surface, filename1,  start_x, start_y):
+        self.surface1 = pygame.image.load(filename1).convert_alpha()
+        self.location_x = start_x
+        self.location_y = start_y
+        self.window_surface = window_surface
+        self.font1 = pygame.font.SysFont('HBC.ttf', 30)
+        self.textscore = self.font1.render('Score: 0', True, (255, 0, 0))
+        self.textWPS = self.font1.render('WPS: 0', True, (255, 0, 0))
+        self.textErrors = self.font1.render('Misses: 0', True, (255, 0, 0))
+
+    def setup(self, score, wps, errors):
+        txt = "Score: {:.0f}"
+        self.textscore = self.font1.render(txt.format(score), True, (255, 0, 0))
+        txt = "WPS: {:.0f}"
+        self.textWPS = self.font1.render(txt.format(wps), True, (255, 0, 0))
+        txt = "Errors: {:.0f}"
+        self.textErrors = self.font1.render(txt.format(errors), True, (255, 0, 0))        
+
+    def draw(self, delta_time):     
+        amplitude_x = 10  # adjust this to change the width of the float
+        amplitude_y = 20  # adjust this to change the height of the float
+        frequency_x = 1  # adjust this to change the speed in the x direction
+        frequency_y = 0.5  # adjust this to change the speed in the y direction
+        x = amplitude_x * math.sin(2*math.pi*frequency_x*(delta_time))
+        y = amplitude_y * math.cos(2*math.pi*frequency_y*(delta_time))
+        #pygame
+        t_x = self.location_x + x
+        t_y = self.location_y + y
+        self.window_surface.blit(self.surface1, (t_x, t_y))
+        self.window_surface.blit(self.textscore, (t_x + 90, t_y + 200))
+        self.window_surface.blit(self.textWPS, (t_x + 90, t_y + 220))
+        self.window_surface.blit(self.textErrors, (t_x + 90, t_y + 240))
+
 class BackgroundSpriteClass:
     surface = None
     window_surface = None

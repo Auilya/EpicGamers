@@ -20,8 +20,11 @@ class GameTextBox:
         self.counterlength = 0
         self.text = text
         self.manager = manager
-        self.container = container
-        #self.textbox = pygame_gui.elements.UITextBox(text,relative_rect=pygame.Rect((100, 350), (650, 240)), container = self.container, manager = self.manager)
+        self.container = container        
+        self.populateBox()
+
+    def reset(self):
+        self.counterlength = 0
         self.populateBox()
 
     def getProgressPercent(self):
@@ -79,9 +82,11 @@ class GameClass:
     app = None
     countdown = None
     gameBox = None
+    gamestarttime = 0    
+    wrongcount = 0
 
-    para = "It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair, we had everything before us, we had nothing before us, we were all going direct to Heaven, we were all going direct the other way - in short, the period was so far like the present period, that some of its noisiest authorities insisted on its being received, for good or for evil, in the superlative degree of comparison only."
-
+    para = "The quick brown fox jumps over the lazy dog."
+    #para = "It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair, we had everything before us, we had nothing before us, we were all going direct to Heaven, we were all going direct the other way - in short, the period was so far like the present period, that some of its noisiest authorities insisted on its being received, for good or for evil, in the superlative degree of comparison only."
     def __init__(self, app): 
         self.app = app
         self.window_surface = self.app.window_surface
@@ -90,34 +95,45 @@ class GameClass:
         self.Game_Container = pygame_gui.core.UIContainer(relative_rect=pygame.Rect((0,0),(800,600)), manager=self.ui_manager)
         self.Score_Field = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((350, 20), (100, 30)), container= self.Game_Container,text='0000', manager=self.ui_manager)
         self.BackMenu = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((20, 560), (60, 30)), container= self.Game_Container,text='Back', manager=self.ui_manager)
-        self.ship = ShipSpriteClass(self.window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 20, 100)
-        self.countdown = CountdownSpriteClass(self.window_surface,"Countdown_1.png","Countdown_2.png","Countdown_3.png","Countdown_go.png", 250, 60)
-        self.gameBox = GameTextBox(self.para, self.Game_Container, manager=self.ui_manager)
+        self.gameBox = GameTextBox(self.para, self.Game_Container, manager=self.ui_manager)        
+        self.advanceGame = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((760, 560), (40, 40)), container= self.Game_Container,text='>', manager=self.ui_manager)
 
-        self.advanceGame = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((260, 300), (80, 30)), container= self.Game_Container,text='>>>', manager=self.ui_manager)
-        
+        self.ship = ShipSpriteClass(self.window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 20, 100)
+        self.countdown = CountdownSpriteClass(self.window_surface,"Countdown_1.png","Countdown_2.png","Countdown_3.png","Countdown_go.png", 250, 60)        
+        self.scoreSprite = ScoreSpriteClass(self.window_surface, "Award.png", 250, 60)
+
     def handle_event(self, event):
         if event.type == SWITCH_TO_MENU:
             self.Game_Container.hide()   
-        elif event.type == START_COUNTDOWN_TO_GAME:                     
+        elif event.type == START_COUNTDOWN_TO_GAME:
+            self.gameBox.reset()                     
             self.Game_Container.show()    
             self.countdown_to_game = self.app.time_cumulative  
             pygame.time.set_timer(pygame.event.Event(START_GAME), 4000, 1)         
         elif event.type == START_GAME:
+            self.gamestarttime = self.app.time_cumulative             
+            self.wrongcount = 0
             self.Game_Container.show()           
-        elif event.type == QUIT_PLAY: # give up
+        elif event.type == QUIT_PLAY: # give up            
             self.Game_Container.hide()            
         elif event.type == END_GAME_PAUSE:
+            self.gameBox.reset()   
             self.Game_Container.show()
             self.countdown_to_menu = self.app.time_cumulative 
+            self.gameendtime = self.app.time_cumulative 
+            wps = (len(self.para) / 5.0) / ((self.app.time_cumulative - self.gamestarttime)/60)
+            score = wps * 10 - self.wrongcount * 2            
+            self.scoreSprite.setup(score, wps, self.wrongcount)
             pygame.time.set_timer(pygame.event.Event(SWITCH_TO_MENU), 4000, 1) 
-        elif event.type == QUIT_GAME:
+        elif event.type == QUIT_GAME:            
             self.Game_Container.hide()        
         elif event.type == pygame_gui.UI_BUTTON_PRESSED:            
             if event.ui_element == self.BackMenu:
                 pygame.event.post(pygame.event.Event(QUIT_PLAY))
             if event.ui_element == self.advanceGame:
                 self.gameBox.advanceCounter()
+        elif event.type == WRONG_CHOICE:
+            self.wrongcount += 1            
         elif event.type == pygame.KEYDOWN:               
             if self.app.currentState == GameStates.PLAYING_GAME: # only process keyboard input when game is 'running
                 key = event.unicode
@@ -131,4 +147,5 @@ class GameClass:
         if self.app.currentState == GameStates.COUNTDOWN_TO_GAME:
             self.countdown.draw(self.app.time_cumulative - self.countdown_to_game)
         elif self.app.currentState == GameStates.SHOW_SCORE:
-            pass # lets show our score!
+            self.scoreSprite.draw(self.app.time_cumulative - self.countdown_to_game)
+            
