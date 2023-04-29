@@ -10,6 +10,7 @@ from events_states import *
 from app_class import *
 from menu_class import *
 from game_class import *
+from paragraphs import *
 
 app = AppClass()
 menu = MenuClass(app)
