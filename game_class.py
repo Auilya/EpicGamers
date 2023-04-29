@@ -4,6 +4,7 @@ from pygame_gui.core import ObjectID
 from spriteclasses import *
 from events_states import *
 from paragraphs import *
+import random
 
 class GameTextBox:
     textbox = None
