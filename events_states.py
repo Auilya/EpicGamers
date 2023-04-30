@@ -11,6 +11,8 @@ QUIT_PLAY               = pygame.event.custom_type() # give up on play and retur
 CORRECT_CHOICE          = pygame.event.custom_type()
 WRONG_CHOICE            = pygame.event.custom_type()
 MULTIPLAYER_NAME_ENTRY  = pygame.event.custom_type()
+MULTIPLAYER_NEW_PLAYER  = pygame.event.custom_type()
+MULTIPLAYER_LESS_PLAYER = pygame.event.custom_type()
 
 #lets make sone states
 class GameStates(Enum):

@@ -16,6 +16,7 @@ class MenuClass:
     ship3 = None
     ship4 = None
     app = None
+    num_players = 0
 
     def __init__(self, app):
         self.app = app
@@ -43,6 +44,7 @@ class MenuClass:
                                                     manager=self.ui_manager)
         
         #Materials for Player Select
+        self.num_players = 1
         self.Player_Select_Container = pygame_gui.core.UIContainer(relative_rect=pygame.Rect((0,0),(800,600)), manager=self.ui_manager)
         self.playerName1 = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((350, 30), (150, 60)), 
                                                     container= self.Player_Select_Container,
@@ -64,6 +66,10 @@ class MenuClass:
                                                     container= self.Player_Select_Container, 
                                                     text='Start Game', 
                                                     manager=self.ui_manager)
+        self.addPlayer = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((600, 250), (60, 60)), 
+                                                    container= self.Player_Select_Container, text= "+",manager=self.ui_manager)
+        self.deletePlayer = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((200, 250), (60, 60)), 
+                                                    container= self.Player_Select_Container, text= "-",manager=self.ui_manager)
 
     def handle_event(self, event):
         if event.type == SWITCH_TO_MENU:
@@ -82,11 +88,20 @@ class MenuClass:
         elif event.type == MULTIPLAYER_NAME_ENTRY:
             self.Menu_Container.hide()
             self.Player_Select_Container.show()        
+            self.update_player_entry(False,True)
+        elif event.type == MULTIPLAYER_NEW_PLAYER:
+            self.update_player_entry(True,False)
+        elif event.type == MULTIPLAYER_LESS_PLAYER:
+            self.update_player_entry(False,False)
         elif event.type == pygame_gui.UI_BUTTON_PRESSED:            
             if event.ui_element == self.Start_One:
                 pygame.event.post(pygame.event.Event(START_COUNTDOWN_TO_GAME))
             if event.ui_element == self.Start_Multi:
                 pygame.event.post(pygame.event.Event(MULTIPLAYER_NAME_ENTRY))
+            if event.ui_element == self.addPlayer:
+                pygame.event.post(pygame.event.Event(MULTIPLAYER_NEW_PLAYER))
+            if event.ui_element == self.deletePlayer:
+                pygame.event.post(pygame.event.Event(MULTIPLAYER_LESS_PLAYER))
             if event.ui_element == self.ExitGame:
                 pygame.event.post(pygame.event.Event(QUIT_GAME))
 
@@ -99,5 +114,34 @@ class MenuClass:
             self.ship4.draw(self.app.time_cumulative+ .7) 
         if self.app.currentState == GameStates.PLAYER_SELECT:
             self.image_background.draw()
-        
+    
+    def update_player_entry(self, isAdd, resetAll):
+        if(isAdd and self.num_players < 4):
+            self.num_players += 1
+        elif(not(isAdd) and self.num_players > 1):
+            self.num_players += -1
+        if(resetAll):
+            self.num_players = 1
+        if(self.num_players == 1):
+            self.playerName2.hide()
+            self.playerName3.hide()
+            self.playerName4.hide()
+            self.addPlayer.show()
+            self.deletePlayer.hide()
+        elif(self.num_players == 2):
+            self.playerName2.show()
+            self.playerName3.hide()
+            self.playerName4.hide()
+            self.deletePlayer.show()
+        elif(self.num_players == 3):
+            self.playerName2.show()
+            self.playerName3.show()
+            self.playerName4.hide()
+            self.addPlayer.show()
+        elif(self.num_players == 4):
+            self.playerName2.show()
+            self.playerName3.show()
+            self.playerName4.show()
+            self.addPlayer.hide()   
+        pygame.display.update()
         
