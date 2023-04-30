@@ -30,6 +30,10 @@ class MenuClass:
                                                     container= self.Menu_Container, 
                                                     text='Start One', 
                                                     manager=self.ui_manager)
+        self.Start_Multi = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((655, 550), (125, 50)), 
+                                                    container= self.Menu_Container, 
+                                                    text='Start Multi', 
+                                                    manager=self.ui_manager)
         self.namePlayer1 = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((20, 10), (150, 40)), 
                                                     container= self.Menu_Container,
                                                     initial_text= "Player 1", 
@@ -37,9 +41,33 @@ class MenuClass:
         self.ExitGame = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((20, 560), (60, 30)), 
                                                     container= self.Menu_Container,text='Exit', 
                                                     manager=self.ui_manager)
+        
+        #Materials for Player Select
+        self.Player_Select_Container = pygame_gui.core.UIContainer(relative_rect=pygame.Rect((0,0),(800,600)), manager=self.ui_manager)
+        self.playerName1 = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((350, 30), (150, 60)), 
+                                                    container= self.Player_Select_Container,
+                                                    initial_text= "Player 1", 
+                                                    manager=self.ui_manager)
+        self.playerName2 = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((350, 130), (150, 60)), 
+                                                    container= self.Player_Select_Container,
+                                                    initial_text= "Player 2", 
+                                                    manager=self.ui_manager)
+        self.playerName3 = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((350, 230), (150, 60)), 
+                                                    container= self.Player_Select_Container,
+                                                    initial_text= "Player 3", 
+                                                    manager=self.ui_manager)
+        self.playerName4 = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((350, 330), (150, 60)), 
+                                                    container= self.Player_Select_Container,
+                                                    initial_text= "Player 4", 
+                                                    manager=self.ui_manager)
+        self.StartMultiplayerGame = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((345, 450), (160, 70)), 
+                                                    container= self.Player_Select_Container, 
+                                                    text='Start Game', 
+                                                    manager=self.ui_manager)
 
     def handle_event(self, event):
         if event.type == SWITCH_TO_MENU:
+            self.Player_Select_Container.hide()
             self.Menu_Container.show()   
         elif event.type == START_COUNTDOWN_TO_GAME:            
             self.Menu_Container.hide()            
@@ -50,12 +78,18 @@ class MenuClass:
         elif event.type == END_GAME_PAUSE:
             self.Menu_Container.hide()
         elif event.type == QUIT_GAME:
-            self.Menu_Container.hide()        
+            self.Menu_Container.hide()
+        elif event.type == MULTIPLAYER_NAME_ENTRY:
+            self.Menu_Container.hide()
+            self.Player_Select_Container.show()        
         elif event.type == pygame_gui.UI_BUTTON_PRESSED:            
             if event.ui_element == self.Start_One:
                 pygame.event.post(pygame.event.Event(START_COUNTDOWN_TO_GAME))
+            if event.ui_element == self.Start_Multi:
+                pygame.event.post(pygame.event.Event(MULTIPLAYER_NAME_ENTRY))
             if event.ui_element == self.ExitGame:
                 pygame.event.post(pygame.event.Event(QUIT_GAME))
+
 
     def do_state(self):
         if self.app.currentState == GameStates.SHOWING_MENU:  
@@ -63,4 +97,7 @@ class MenuClass:
             self.ship2.draw(self.app.time_cumulative+ 1.3)  
             self.ship3.draw(self.app.time_cumulative+ 2.7) 
             self.ship4.draw(self.app.time_cumulative+ .7) 
+        if self.app.currentState == GameStates.PLAYER_SELECT:
+            self.image_background.draw()
+        
         

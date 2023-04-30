@@ -36,7 +36,9 @@ while app.is_running:
         elif event.type == END_GAME_PAUSE:                        
             app.nextState = GameStates.SHOW_SCORE 
         elif event.type == QUIT_GAME:                        
-            app.nextState = GameStates.EXIT                        
+            app.nextState = GameStates.EXIT    
+        elif event.type == MULTIPLAYER_NAME_ENTRY:
+            app.nextState = GameStates.PLAYER_SELECT                    
         elif event.type == pygame.QUIT:
             pygame.event.post(pygame.event.Event(QUIT_GAME))  
         app.manager.process_events(event)                
