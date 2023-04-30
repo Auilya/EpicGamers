@@ -88,7 +88,7 @@ class ScoreSpriteClass:
     location_y = 0   
     font1 = None
     textscore = None
-    textWPS = None
+    textWPM = None
     textErrors = None
     
     def __init__(self, window_surface, filename1,  start_x, start_y):
@@ -98,14 +98,14 @@ class ScoreSpriteClass:
         self.window_surface = window_surface
         self.font1 = pygame.font.SysFont('HBC.ttf', 30)
         self.textscore = self.font1.render('Score: 0', True, (255, 0, 0))
-        self.textWPS = self.font1.render('WPS: 0', True, (255, 0, 0))
+        self.textWPM = self.font1.render('WPM: 0', True, (255, 0, 0))
         self.textErrors = self.font1.render('Misses: 0', True, (255, 0, 0))
 
-    def setup(self, score, wps, errors):
+    def setup(self, score, wpm, errors):
         txt = "Score: {:.0f}"
         self.textscore = self.font1.render(txt.format(score), True, (255, 0, 0))
-        txt = "WPS: {:.0f}"
-        self.textWPS = self.font1.render(txt.format(wps), True, (255, 0, 0))
+        txt = "WPM: {:.0f}"
+        self.textWPM = self.font1.render(txt.format(wpm), True, (255, 0, 0))
         txt = "Errors: {:.0f}"
         self.textErrors = self.font1.render(txt.format(errors), True, (255, 0, 0))        
 
@@ -121,7 +121,7 @@ class ScoreSpriteClass:
         t_y = self.location_y + y
         self.window_surface.blit(self.surface1, (t_x, t_y))
         self.window_surface.blit(self.textscore, (t_x + 90, t_y + 200))
-        self.window_surface.blit(self.textWPS, (t_x + 90, t_y + 220))
+        self.window_surface.blit(self.textWPM, (t_x + 90, t_y + 220))
         self.window_surface.blit(self.textErrors, (t_x + 90, t_y + 240))
 
 class BackgroundSpriteClass:

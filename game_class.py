@@ -121,9 +121,9 @@ class GameClass:
             self.Game_Container.show()
             self.countdown_to_menu = self.app.time_cumulative 
             self.gameendtime = self.app.time_cumulative 
-            wps = (len(self.para) / 5.0) / ((self.app.time_cumulative - self.gamestarttime)/60)
-            score = wps * 10 - self.wrongcount * 2            
-            self.scoreSprite.setup(score, wps, self.wrongcount)
+            wpm = (len(self.para) / 5.0) / ((self.app.time_cumulative - self.gamestarttime)/60)
+            score = wpm * 10 - self.wrongcount * 2            
+            self.scoreSprite.setup(score, wpm, self.wrongcount)
             pygame.time.set_timer(pygame.event.Event(SWITCH_TO_MENU), 4000, 1) 
         elif event.type == QUIT_GAME:            
             self.Game_Container.hide()        
