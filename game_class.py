@@ -87,6 +87,10 @@ class GameClass:
     gamestarttime = 0    
     wrongcount = 0
     para = paraList[round(random.uniform(0, len(paraList)-1))]
+    wpm = 0
+    winning_player = None
+    winnerSprite = None
+
     def __init__(self, app): 
         self.app = app
         self.window_surface = self.app.window_surface
@@ -101,6 +105,8 @@ class GameClass:
         self.ship = ShipSpriteClass(self.window_surface,"Ship_1.png","Ship_2.png","Ship_3.png", 20, 100)
         self.countdown = CountdownSpriteClass(self.window_surface,"Countdown_1.png","Countdown_2.png","Countdown_3.png","Countdown_go.png", 250, 60)        
         self.scoreSprite = ScoreSpriteClass(self.window_surface, "Award.png", 250, 60)
+        self.winnerSprite = WinnerSpriteClass(self.window_surface, "Award.png", 250, 60)
+
 
     def handle_event(self, event):
         if event.type == SWITCH_TO_MENU:
@@ -121,9 +127,14 @@ class GameClass:
             self.Game_Container.show()
             self.countdown_to_menu = self.app.time_cumulative 
             self.gameendtime = self.app.time_cumulative 
-            wpm = (len(self.para) / 5.0) / ((self.app.time_cumulative - self.gamestarttime)/60)
-            score = wpm * 10 - self.wrongcount * 2            
-            self.scoreSprite.setup(score, wpm, self.wrongcount)
+            self.wpm = (len(self.para) / 5.0) / ((self.app.time_cumulative - self.gamestarttime)/60)
+            score = self.calculate_score()            
+            self.scoreSprite.setup(score, self.wpm, self.wrongcount)
+            pygame.time.set_timer(pygame.event.Event(GAME_FINISH), 4000, 1) 
+        elif event.type == MULTIPLAYER_SHOW_WIN2:
+            self.gameBox.reset()   
+            self.Game_Container.show()
+            self.winnerSprite.update_winner(self.winning_player)
             pygame.time.set_timer(pygame.event.Event(SWITCH_TO_MENU), 4000, 1) 
         elif event.type == QUIT_GAME:            
             self.Game_Container.hide()        
@@ -148,4 +159,13 @@ class GameClass:
             self.countdown.draw(self.app.time_cumulative - self.countdown_to_game)
         elif self.app.currentState == GameStates.SHOW_SCORE:
             self.scoreSprite.draw(self.app.time_cumulative - self.countdown_to_game)
-            
+        elif self.app.currentState == GameStates.SHOWING_WINNER:
+            self.winnerSprite.draw(self.app.time_cumulative - self.countdown_to_game)
+
+    def calculate_score(self):
+        wpm = (len(self.para) / 5.0) / ((self.app.time_cumulative - self.gamestarttime)/60)
+        score = wpm * 10 - self.wrongcount * 2
+        return score
+    
+    def update_winner(self, winner):
+        self.winning_player = winner

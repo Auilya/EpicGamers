@@ -89,6 +89,10 @@ class MenuClass:
             self.Menu_Container.hide()
             self.Player_Select_Container.show()        
             self.update_player_entry(False,True)
+        elif event.type == MULTIPLAYER_GAME_START:
+            pygame.event.post(pygame.event.Event(START_COUNTDOWN_TO_GAME))
+            self.Player_Select_Container.hide()
+            self.package_player_information()
         elif event.type == MULTIPLAYER_NEW_PLAYER:
             self.update_player_entry(True,False)
         elif event.type == MULTIPLAYER_LESS_PLAYER:
@@ -102,6 +106,8 @@ class MenuClass:
                 pygame.event.post(pygame.event.Event(MULTIPLAYER_NEW_PLAYER))
             if event.ui_element == self.deletePlayer:
                 pygame.event.post(pygame.event.Event(MULTIPLAYER_LESS_PLAYER))
+            if event.ui_element == self.StartMultiplayerGame:
+                pygame.event.post(pygame.event.Event(MULTIPLAYER_GAME_START))
             if event.ui_element == self.ExitGame:
                 pygame.event.post(pygame.event.Event(QUIT_GAME))
 
@@ -114,6 +120,17 @@ class MenuClass:
             self.ship4.draw(self.app.time_cumulative+ .7) 
         if self.app.currentState == GameStates.PLAYER_SELECT:
             self.image_background.draw()
+
+    def package_player_information(self):
+        player_list = []
+        player_list.append(str(self.playerName1.get_text()))
+        if(self.num_players >= 2):
+            player_list.append(str(self.playerName2.get_text()))
+        if(self.num_players >= 3):
+            player_list.append(str(self.playerName3.get_text()))
+        if(self.num_players == 4):
+            player_list.append(str(self.playerName4.get_text()))
+        return player_list
     
     def update_player_entry(self, isAdd, resetAll):
         if(isAdd and self.num_players < 4):
