@@ -18,9 +18,16 @@ menu = MenuClass(app)
 game = GameClass(app)
 manager = MultiplayerManager()
 
+nextStates = {SWITCH_TO_MENU: GameStates.SHOWING_MENU, START_COUNTDOWN_TO_GAME: GameStates.COUNTDOWN_TO_GAME,
+              START_GAME: GameStates.PLAYING_GAME, QUIT_PLAY: GameStates.SHOWING_MENU, 
+              END_GAME_PAUSE: GameStates.SHOW_SCORE, QUIT_GAME: GameStates.EXIT, MULTIPLAYER_NAME_ENTRY: GameStates.PLAYER_SELECT
+              }
+
 app.currentState = GameStates.SHOWING_MENU
 app.nextState = GameStates.SHOWING_MENU                    
 pygame.event.post(pygame.event.Event(SWITCH_TO_MENU))  
+
+
 
 while app.is_running:    
     app.updateClock()
@@ -28,21 +35,13 @@ while app.is_running:
         menu.handle_event(event)
         game.handle_event(event)
         manager.handle_event(event)
-        if event.type == SWITCH_TO_MENU:                            
-            app.nextState = GameStates.SHOWING_MENU   
-        elif event.type == START_COUNTDOWN_TO_GAME:                        
-            app.nextState = GameStates.COUNTDOWN_TO_GAME            
-        elif event.type == START_GAME:                        
-            app.nextState = GameStates.PLAYING_GAME 
-        elif event.type == QUIT_PLAY: # give up                        
-            app.nextState = GameStates.SHOWING_MENU 
-        elif event.type == END_GAME_PAUSE:                        
-            app.nextState = GameStates.SHOW_SCORE 
-        elif event.type == QUIT_GAME:                        
-            app.nextState = GameStates.EXIT    
-        elif event.type == MULTIPLAYER_NAME_ENTRY:
-            app.nextState = GameStates.PLAYER_SELECT         
-        elif event.type == MULTIPLAYER_GAME_START:
+
+        try: 
+            app.nextState = nextStates[event.type]
+        except:
+            KeyError
+
+        if event.type == MULTIPLAYER_GAME_START: 
             manager.fill_in_names(menu.package_player_information())
         elif event.type == MULTIPLAYER_NEXT_PLAYER:
             manager.update_scores(game.calculate_score())
