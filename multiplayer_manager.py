@@ -58,8 +58,11 @@ class MultiplayerManager():
         self.player_names = name_list
 
     def next_player_start(self):
-        pygame.display.set_caption(self.player_names[self.current_player]+", your turn!")
-        self.current_player += 1
+        try: 
+            pygame.display.set_caption(self.player_names[self.current_player]+", your turn!")
+            self.current_player += 1
+        except:
+            IndexError
     
     def package_winner_information(self):
         index = 0

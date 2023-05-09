@@ -72,6 +72,7 @@ class GameTextBox:
         self.textbox = pygame_gui.elements.UITextBox(newstr,relative_rect=pygame.Rect((100, 350), (650, 240)), container = self.container, manager = self.manager) 
 
 class GameClass:
+    correct_in_a_row = 0
     window_surface = None
     ui_manager = None
     image_background = None
@@ -141,15 +142,22 @@ class GameClass:
         elif event.type == pygame_gui.UI_BUTTON_PRESSED:            
             if event.ui_element == self.BackMenu:
                 pygame.event.post(pygame.event.Event(QUIT_PLAY))
+                self.ship.speed = 0
+                self.ship.location_x = 0
             if event.ui_element == self.advanceGame:
                 self.gameBox.advanceCounter()
         elif event.type == WRONG_CHOICE:
-            self.wrongcount += 1            
+            self.wrongcount += 1
+            if self.ship.speed > 0:
+                self.ship.speed -= 0.1
+        elif event.type == CORRECT_CHOICE and self.ship.speed < 0.9:
+            self.ship.speed += 0.3
         elif event.type == pygame.KEYDOWN:               
             if self.app.currentState == GameStates.PLAYING_GAME: # only process keyboard input when game is 'running
                 key = event.unicode
                 if len(key) and key in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,.<>1234567890-=+_)(*&^%$#@!~`[]\{}|;':/? ":            
                     self.gameBox.tryLetter(key)
+                    
 
     def do_state(self):
         if self.app.currentState != GameStates.SHOWING_MENU:  

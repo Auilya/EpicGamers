@@ -27,8 +27,6 @@ app.currentState = GameStates.SHOWING_MENU
 app.nextState = GameStates.SHOWING_MENU                    
 pygame.event.post(pygame.event.Event(SWITCH_TO_MENU))  
 
-
-
 while app.is_running:    
     app.updateClock()
     for event in pygame.event.get():                
@@ -44,7 +42,10 @@ while app.is_running:
         if event.type == MULTIPLAYER_GAME_START: 
             manager.fill_in_names(menu.package_player_information())
         elif event.type == MULTIPLAYER_NEXT_PLAYER:
-            manager.update_scores(game.calculate_score())
+            if manager.num_players > 1:
+                manager.update_scores(game.calculate_score())
+            else:
+                app.nextState = GameStates.SHOWING_MENU
         elif event.type == MULTIPLAYER_SHOW_WIN:
             game.update_winner(manager.package_winner_information())
             pygame.event.post(pygame.event.Event(MULTIPLAYER_SHOW_WIN2))  

@@ -11,6 +11,7 @@ class ShipSpriteClass:
     period_cycle_time = 5
     framerate_time = 2
     window_surface = None
+    speed = 0    
     def __init__(self, window_surface, filename1, filename2, filename3, start_x, start_y):
         self.surface1 = pygame.image.load(filename1).convert_alpha()
         self.surface2 = pygame.image.load(filename2).convert_alpha()
@@ -46,6 +47,9 @@ class ShipSpriteClass:
             self.window_surface.blit(self.surface3, (self.location_x, loc_y))
         else:
             self.window_surface.blit(self.surface2, (self.location_x, loc_y))    
+        
+        self.location_x += self.speed
+        
 
 class CountdownSpriteClass:
     surfacego = None
